@@ -1,0 +1,17 @@
+CREATE DATABASE IF NOT EXISTS `bytex-survey`;
+USE `bytex-survey`;
+
+CREATE TABLE IF NOT EXISTS survey_submissions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  submission_number INT NOT NULL,
+  life_stages VARCHAR(500) DEFAULT NULL,
+  emotions VARCHAR(1000) DEFAULT NULL,
+  moments VARCHAR(1000) DEFAULT NULL,
+  awareness VARCHAR(100) DEFAULT NULL,
+  wishes VARCHAR(500) DEFAULT NULL,
+  email VARCHAR(255) DEFAULT NULL,
+  name VARCHAR(255) DEFAULT NULL,
+  org_size VARCHAR(100) DEFAULT NULL,
+  submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_submitted_at (submitted_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
