@@ -9,8 +9,7 @@ CREATE TABLE IF NOT EXISTS survey_submissions (
   moments VARCHAR(1000) DEFAULT NULL,
   awareness VARCHAR(100) DEFAULT NULL,
   wishes VARCHAR(500) DEFAULT NULL,
-  email VARCHAR(255) DEFAULT NULL,
-  name VARCHAR(255) DEFAULT NULL,
+  organization_name VARCHAR(255) DEFAULT NULL,
   org_size VARCHAR(100) DEFAULT NULL,
   submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   INDEX idx_submitted_at (submitted_at)

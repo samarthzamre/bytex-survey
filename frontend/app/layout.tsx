@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ByteX Life Snapshot Survey",
-  description: "Production-ready ByteX multi-step survey",
+  title: "Life Snapshot Survey",
+  description: "Production-ready multi-step survey",
 };
 
 export default function RootLayout({
@@ -25,6 +25,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>

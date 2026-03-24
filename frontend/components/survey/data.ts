@@ -1,4 +1,13 @@
 export const MAX_MOMENTS = 3;
+export const ORG_SIZE_OPTIONS = [
+  "1-50",
+  "51-200",
+  "201-500",
+  "501-1000",
+  "1001-5000",
+  "5001-10000",
+  "10000+",
+] as const;
 
 export type StageKey = "parent" | "caregiver" | "pet" | "newjoiner" | "empty" | "solo";
 export type WishKey = "peace" | "time" | "health" | "seen" | "setup" | "nothing";
@@ -62,6 +71,11 @@ export function normalizeAwarenessField(raw: string | undefined): string {
     if (n >= 1 && n <= 5) return AWARENESS_LABELS[n] ?? t;
   }
   return t;
+}
+
+export function normalizeOrgSize(value: string | null | undefined): string {
+  const trimmed = (value ?? "").trim();
+  return ORG_SIZE_OPTIONS.includes(trimmed as (typeof ORG_SIZE_OPTIONS)[number]) ? trimmed : "";
 }
 
 export const wishLabels: Record<WishKey, string> = {

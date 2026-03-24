@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-brand: #1D9E75;
+  --color-brand-light: #26c993;
+  --color-surface: #111318;
+  --color-surface-2: #191c22;
+  --color-surface-3: #22262e;
+  --color-border: #2a2e38;
+  --color-text-primary: #f0f2f5;
+  --color-text-secondary: #8b919e;
+  --color-text-muted: #5c6270;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Recharts label overrides */
+.recharts-cartesian-axis-tick-value {
+  fill: #8b919e !important;
+  font-size: 11px !important;
+}
+.recharts-default-tooltip {
+  background: #191c22 !important;
+  border: 1px solid #2a2e38 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4) !important;
+}
+.recharts-tooltip-label {
+  color: #f0f2f5 !important;
+  font-weight: 600 !important;
+}
+.recharts-tooltip-item {
+  color: #8b919e !important;
+}
+
+/* Glass card util */
+.glass-card {
+  background: linear-gradient(135deg, rgba(25,28,34,.9), rgba(34,38,46,.7));
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #2a2e38; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #3a3e48; }

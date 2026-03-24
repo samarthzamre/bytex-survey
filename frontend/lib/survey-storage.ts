@@ -1,4 +1,4 @@
-import type { StageKey, WishKey } from "@/components/survey/data";
+import { normalizeOrgSize, type StageKey, type WishKey } from "@/components/survey/data";
 
 export const SURVEY_STORAGE_KEY = "bytex_survey_state_v3";
 
@@ -13,10 +13,9 @@ export type PersistedSurvey = {
   /** True only after successful API submit — user cannot submit again */
   submitted: boolean;
   submissionNumber: number;
-  emailState: "idle" | "sending" | "sent" | "error";
+  submitState: "idle" | "sending" | "sent" | "error";
   // Optional contact info
-  email: string;
-  name: string;
+  organizationName: string;
   orgSize: string;
 };
 
@@ -55,13 +54,12 @@ export function loadSurveyFromStorage(): Partial<PersistedSurvey> | null {
     if (submitted) step = 6;
 
     const submissionNumber = typeof p.submissionNumber === "number" ? p.submissionNumber : 0;
-    const es = p.emailState;
-    const emailState =
+    const es = p.submitState;
+    const submitState =
       es === "sending" || es === "sent" || es === "error" || es === "idle" ? es : "idle";
 
-    const email = typeof p.email === "string" ? p.email : "";
-    const name = typeof p.name === "string" ? p.name : "";
-    const orgSize = typeof p.orgSize === "string" ? p.orgSize : "";
+    const organizationName = typeof p.organizationName === "string" ? p.organizationName : "";
+    const orgSize = normalizeOrgSize(typeof p.orgSize === "string" ? p.orgSize : "");
 
     return {
       v: 3,
@@ -73,9 +71,8 @@ export function loadSurveyFromStorage(): Partial<PersistedSurvey> | null {
       selWishes: wishes,
       submitted,
       submissionNumber,
-      emailState,
-      email,
-      name,
+      submitState,
+      organizationName,
       orgSize,
     };
   } catch {

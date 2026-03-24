@@ -40,5 +40,16 @@ services:
     depends_on:
       - survey-backend
 
+  survey-admin:
+    build:
+      context: ./frontend_admin
+    container_name: survey-admin
+    ports:
+      - "3001:3001"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:4000
+    depends_on:
+      - survey-backend
+
 volumes:
   mysql_data:

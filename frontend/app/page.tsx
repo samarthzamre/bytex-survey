@@ -16,6 +16,7 @@ import {
   awarenessLabel,
   emotionsByStage,
   momentsByStage,
+  normalizeOrgSize,
   stageData,
   wishLabels,
 } from "@/components/survey/data";
@@ -31,13 +32,12 @@ export default function Home() {
   const [awareness, setAwareness] = useState<number | null>(null);
   const [selWishes, setSelWishes] = useState<WishKey[]>([]);
   const [submissionCount, setSubmissionCount] = useState<number>(0);
-  const [emailState, setEmailState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [submitState, setSubmitState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   /** After successful submit — cannot answer or submit again (this browser) */
   const [submitted, setSubmitted] = useState(false);
 
   // Optional contact info
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  const [organizationName, setOrganizationName] = useState("");
   const [orgSize, setOrgSize] = useState("");
 
   const skipSave = useRef(true);
@@ -57,10 +57,9 @@ export default function Home() {
       if ("awareness" in p) setAwareness(p.awareness ?? null);
       if (p.selWishes) setSelWishes(p.selWishes);
       if (typeof p.submissionNumber === "number") setSubmissionCount(p.submissionNumber);
-      if (p.emailState) setEmailState(p.emailState);
-      if (p.email) setEmail(p.email);
-      if (p.name) setName(p.name);
-      if (p.orgSize) setOrgSize(p.orgSize);
+      if (p.submitState) setSubmitState(p.submitState);
+      if (p.organizationName) setOrganizationName(p.organizationName);
+      if (typeof p.orgSize === "string") setOrgSize(normalizeOrgSize(p.orgSize));
     }
     skipSave.current = false;
   }, []);
@@ -76,12 +75,11 @@ export default function Home() {
       selWishes,
       submitted,
       submissionNumber: submissionCount,
-      emailState,
-      email,
-      name,
+      submitState,
+      organizationName,
       orgSize,
     });
-  }, [step, selStages, selEmotions, selMoments, awareness, selWishes, submitted, submissionCount, emailState, email, name, orgSize]);
+  }, [step, selStages, selEmotions, selMoments, awareness, selWishes, submitted, submissionCount, submitState, organizationName, orgSize]);
 
   const emotions = useMemo(() => {
     const seen = new Set<string>();
@@ -156,7 +154,7 @@ export default function Home() {
   async function sendSurveyToBackend() {
     if (submitted) return;
 
-    setEmailState("sending");
+    setSubmitState("sending");
 
     const payload = {
       life_stages: selStages.map((s) => stageData[s].title).join(", "),
@@ -164,9 +162,8 @@ export default function Home() {
       moments: selMoments.join(", "),
       awareness: awarenessLabel(awareness),
       wishes: selWishes.map((w) => wishLabels[w]).join(", "),
-      email: email.trim() || null,
-      name: name.trim() || null,
-      org_size: orgSize.trim() || null,
+      organization_name: organizationName.trim() || null,
+      org_size: normalizeOrgSize(orgSize) || null,
     };
 
     try {
@@ -178,15 +175,15 @@ export default function Home() {
       const data = (await res.json()) as { ok?: boolean; submissionNumber?: number; error?: string };
 
       if (!res.ok || !data.ok) {
-        setEmailState("error");
+        setSubmitState("error");
         return;
       }
 
       setSubmissionCount(typeof data.submissionNumber === "number" ? data.submissionNumber : 0);
-      setEmailState("sent");
+      setSubmitState("sent");
       setSubmitted(true);
     } catch {
-      setEmailState("error");
+      setSubmitState("error");
     }
   }
 
@@ -235,11 +232,9 @@ export default function Home() {
               onToggleWish={toggleWish}
               onBack={() => setStep(4)}
               onSubmit={showResults}
-              email={email}
-              name={name}
+              organizationName={organizationName}
               orgSize={orgSize}
-              onEmailChange={setEmail}
-              onNameChange={setName}
+              onOrganizationNameChange={setOrganizationName}
               onOrgSizeChange={setOrgSize}
             />
           )}
@@ -253,10 +248,10 @@ export default function Home() {
           selMoments={selMoments}
           awareness={awareness}
           selWishes={selWishes}
-          emailState={emailState}
+          submitState={submitState}
           submissionCount={submissionCount}
           completedLocked={submitted}
-          onRetryEmail={!submitted && emailState === "error" ? () => void sendSurveyToBackend() : undefined}
+          onRetrySubmit={!submitted && submitState === "error" ? () => void sendSurveyToBackend() : undefined}
         />
       )}
     </main>
